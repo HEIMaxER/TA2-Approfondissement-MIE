@@ -8,129 +8,102 @@ class Animal(models.Model):
     etat = models.CharField(max_length=255)
     lieu = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.animal_id
+
 
 class Equipement(models.Model):
     lieu =  models.CharField(max_length=255)
     disponibilite =  models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.lieu
 
-def lit_etat(animal_id) :
+def lit_etat(id) :
 
-    with open('animal.json', "r") as f:
-        animal = json.load(f)
-
+    animal = Animal.objects.get(pk=id)
     try :
-        poca = animal[animal_id]
-        return( poca['ETAT'])
+        return(animal.etat)
 
     except :
-        print("Désolé, %s n'est pas un animal connu" % animal_id)
+        print("Désolé, %s n'est pas un animal connu" % id)
         return None
 
-def lit_lieu(animal_id) :
+def lit_lieu(id) :
+    animal = Animal.objects.get(pk=id)
+    try:
+        return (animal.lieu)
 
-    with open('animal.json', "r") as f:
-        animal = json.load(f)
+    except:
+        return("Désolé, %s n'est pas un animal connu" % id)
+
+
+def verifie_disponibilite(lieu):
+
+
+    equipement = Equipement.objects.get(pk=lieu)
 
     try :
-        poca = animal[animal_id]
-        return( poca['LIEU'])
+        return(equipement.disponibilite)
 
     except :
-        print("Désolé, %s n'est pas un animal connu" % animal_id)
-        return None
-
-def verifie_disponibilite(equipement_id):
-
-    with open('équipement.json', "r") as f:
-        equipement = json.load(f)
-
-    try :
-        poca = equipement[equipement_id]
-        return( poca['DISPONIBILITÉ'])
-
-    except :
-        print("Désolé, %s n'est pas un equipement connu" % equipement_id)
-        return None
+        return("Désolé, %s n'est pas un equipement connu" % id)
 
 
-def cherche_occupant(lieu):
 
-    with open('animal.json', "r") as f:
-        animal = json.load(f)
+def cherche_occupant(id):
 
-    occupants = []
-    for k in animal :
-
-        if animal[k]['LIEU'] == lieu :
-            occupants.append(k)
+    occupants = Animal.objects.filter(lieu=id)
 
     if len(occupants) != 0:
         return occupants
 
     else :
-        print("Désolé, %s n'est pas un lieu connu" % lieu)
-        return None
+        return("Désolé, %s n'est pas un lieu connu" % id)
 
-def change_etat(animal_id, etat):
-    etats_autho = {'affamé', 'fatigué', 'repus', 'endormi'}
+def change_etat(ida, ide):
+    etats_autho = {'affame', 'fatigue', 'repus', 'endormi'}
 
-    with open('animal.json', "r") as f:
-        animal = json.load(f)
-
+    animal = Animal.objects.get(animal_id=ida)
     try :
-        poca = animal[animal_id]
-        if etat in etats_autho :
-            poca['ETAT'] = etat
-        with open('animal.json', "w") as g:
-            json.dump(animal, g)
+
+        if ide in etats_autho :
+            animal.etat = ide
+            animal.save()
 
     except :
-        print("Désolé, %s n'est pas un animal connu"% animal_id)
+        print("Désolé, %s n'est pas un animal connu"% ida)
         return None
 
-def change_lieu(animal_id, lieu):
+def change_lieu(ida, ide):
 
     lieu_autho = {"littière","mangeoire", "roue", "nid"}
 
-    if lieu in lieu_autho :
+    if ide in lieu_autho :
 
-        if verifie_disponibilite(lieu) == 'libre':
+        if verifie_disponibilite(ide) == 'libre':
 
-            with open('animal.json', "r") as f:
-                animal = json.load(f)
+            animal = Animal.objects.get(pk=ida)
 
             try :
-                poca = animal[animal_id]
-
-                l2 = poca['LIEU']
-                with open('équipement.json', "r") as f:
-                    equipement = json.load(f)
-
-                poca2 = equipement[l2]
-                poca2['DISPONIBILITÉ'] = 'libre'
+                l2 = animal.lieu
+                equipement = Equipement.objects.get(pk=l2)
+                equipement.disponibilite = 'libre'
 
 
-                if poca['LIEU'] != 'littière':
-                    poca3 = equipement[lieu]
-                    poca3['DISPONIBILITÉ'] = 'occupé'
+                if animal.lieu != 'littière':
+                    equipement1 = Equipement.objects.get(pk=ide)
+                    equipement1.disponibilite = 'occupé'
 
-                with open('équipement.json', "w") as g:
-                    json.dump(equipement, g)
 
-                poca['LIEU'] = lieu
-                with open('animal.json', "w") as g:
-                    json.dump(animal, g)
+                animal.lieu = ide
+
 
             except :
-                print("Désolé, %s n'est pas un animal connu" % animal_id)
+                print("Désolé, %s n'est pas un animal connu" % ida)
                 return None
         else :
-            print('%s est occupé' % lieu)
+            print('%s est occupé' % ide)
             return None
 
     else :
-        print("Désolé, %s n'est pas un lieu connu" % lieu)
+        print("Désolé, %s n'est pas un lieu connu" % ide)
         return None

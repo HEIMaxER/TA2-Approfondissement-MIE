@@ -1,1 +1,20 @@
-<h1> "Hello world" <h1/>
+<h1> "Gestion Animalerie" <h1/>
+
+<ul>
+    {% for animal in animaux %}
+        <li> {{animal.animal_id}} {{animal.etat}} {{animal.lieu }}</li>
+    {% endfor %}
+</ul>
+
+    <form action="">
+        {% for animal in animaux %}
+       <input type="radio" name="animal" value={{animal.animal_id}}> {{animal.animal_id}}<br>
+    {% endfor %}
+        </form>
+
+    <form action="">
+  <input type="radio" name="action" value="male"> Nourrir<br>
+  <input type="radio" name="action" value="female"> Divertir<br>
+  <input type="radio" name="action" value="female"> Coucher<br>
+  <input type="radio" name="action" value="other"> Reveiller
+</form>
