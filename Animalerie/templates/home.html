@@ -6,15 +6,16 @@
     {% endfor %}
 </ul>
 
-    <form action="">
+    <form cible="">
         {% for animal in animaux %}
        <input type="radio" name="animal" value={{animal.animal_id}}> {{animal.animal_id}}<br>
     {% endfor %}
         </form>
 
     <form action="">
-  <input type="radio" name="action" value="male"> Nourrir<br>
-  <input type="radio" name="action" value="female"> Divertir<br>
-  <input type="radio" name="action" value="female"> Coucher<br>
-  <input type="radio" name="action" value="other"> Reveiller
+  <input type="radio" name="action" value="Nourrir(cible)"> Nourrir<br>
+  <input type="radio" name="action" value="Divertir(cible)"> Divertir<br>
+  <input type="radio" name="action" value="Coucher(cible)"> Coucher<br>
+  <input type="radio" name="action" value="Reveiller(cible)"> Reveiller<br>
+  <input type="button" value="Executer" onclick="print(action)" </button>
 </form>
